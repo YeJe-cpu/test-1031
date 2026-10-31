@@ -57,10 +57,11 @@
 
   // ---------- expressions ----------
   let cur = 'neutral', prev = 'neutral', mix = 1;
+  const pick = (...names) => names.find(n => tex[n]) || 'neutral';
   function setExpr(n) { if (n === cur || !tex[n]) return; prev = mix > 0.5 ? cur : prev; cur = n; mix = 0; }
 
   // ---------- interaction state ----------
-  let state = 'idle', grabbing = false, hovering = false;
+  let state = 'idle', grabbing = false, hovering = false, inHero = false, pokeUntil = 0, gazeRot = 0;
   let grabPt = [0, 0], mouse = [0, 0], D = [0, 0], maxPull = 0, pulls = 0, intro = false;
   let letgoUntil = 0, doneUntil = 0, nextBlink = performance.now() + 2500, blinkUntil = 0, grabAt = 0;
   let rot = 0, rotV = 0, off = [0, 0], offV = [0, 0];
@@ -77,8 +78,10 @@
     mouse = toImg(e.clientX, e.clientY);
     if (!grabbing) hand.style.transform = `translate(${e.clientX}px,${e.clientY}px) translate(-50%,-50%)`;
     hovering = hit(mouse);
-    hand.classList.toggle('show', hovering || grabbing);
-    hero.classList.toggle('hovering', hovering || grabbing);
+    const hr = hero.getBoundingClientRect();
+    inHero = e.clientX >= hr.left && e.clientX <= hr.right && e.clientY >= hr.top && e.clientY <= hr.bottom;
+    hand.classList.toggle('show', inHero || grabbing);
+    hero.classList.toggle('hovering', inHero || grabbing);
   }, { passive: true });
   addEventListener('pointerdown', e => {
     const p = toImg(e.clientX, e.clientY); mouse = p;
@@ -94,6 +97,12 @@
   const release = () => {
     if (!grabbing) return; grabbing = false; hand.textContent = '🖐️';
     const now = performance.now();
+    if (now - grabAt < 230 && maxPull < 0.03) { // quick tap = poke / slap
+      pokeUntil = now + 750; window.SFX && SFX.poke && SFX.poke();
+      for (let k = 0; k < NV; k++) { if (w[k] < 0.01) continue; const dx = base[2*k] - grabPt[0], dy = base[2*k+1] - grabPt[1], r = Math.hypot(dx, dy) + 1e-3; vel[2*k] += dx / r * w[k] * 0.9; vel[2*k+1] += dy / r * w[k] * 0.9; }
+      rotV += (grabPt[0] < 0.5 ? 1 : -1) * 0.9;
+      return;
+    }
     window.SFX && SFX.release(maxPull);
     if (maxPull > 0.06) pulls++;
     if (pulls >= C.pullsUntilDone) { pulls = 0; doneUntil = now + 2600; if (!intro) showIntro(); }
@@ -132,7 +141,7 @@
     }
     for (let x = 0; x < NV * 2; x++) disp[x] += vel[x] * dt;
     // head sway springs
-    const tr = grabbing ? Math.max(-.14, Math.min(.14, D[0] * .28 * (grabPt[1] < .8 ? 1 : .3))) : 0;
+    const tr = grabbing ? Math.max(-.14, Math.min(.14, D[0] * .28 * (grabPt[1] < .8 ? 1 : .3))) : gazeRot;
     rotV += ((tr - rot) * 90 - rotV * 7) * dt; rot += rotV * dt;
     for (let a = 0; a < 2; a++) { const t = grabbing ? D[a] * .07 : 0; offV[a] += ((t - off[a]) * 110 - offV[a] * 8) * dt; off[a] += offV[a] * dt; }
   }
@@ -165,14 +174,31 @@
     let s, e;
     const pullLen = Math.hypot(D[0], D[1]);
     if (grabbing && window.SFX) { SFX.stretch(pullLen, Math.abs(pullLen - (frame.pl || 0)) / Math.max(dt, 1e-3)); frame.pl = pullLen; }
-    if (grabbing) { const early = now - grabAt < 280 && pullLen < .05; s = pullLen > .03 ? 'pull' : 'grab'; e = early || pullLen < .03 ? 'shock' : 'pain'; }
+    gazeRot = 0;
+    if (grabbing) {
+      const early = now - grabAt < 280 && pullLen < .05; s = pullLen > .03 ? 'pull' : 'grab';
+      const ax = Math.abs(D[0]);
+      if (early || pullLen < .03) e = 'shock';
+      else if (pullLen > .33) e = pick('yell', 'pain');            // pulled way too far
+      else if (D[1] < -0.7 * ax) e = pick('pain_up', 'pain');       // pulled upward
+      else if (D[1] > 0.7 * ax) e = pick('yell', 'pain');           // pulled downward
+      else e = 'pain';                                               // pulled sideways
+    }
+    else if (now < pokeUntil) { s = 'grab'; e = pick('flinch', 'shock'); }
     else if (now < doneUntil) { s = 'letgo'; e = 'done'; }
     else if (now < letgoUntil) { s = 'letgo'; e = 'dizzy'; }
-    else if (hovering) { s = 'hover'; e = 'annoyed'; }
+    else if (hovering) { s = 'hover'; e = (mouse[1] > .3 && mouse[1] < .45) ? pick('flinch', 'annoyed') : 'annoyed'; }
     else {
       s = ''; e = 'neutral';
+      if (inHero) { // watch the fist
+        const dx = mouse[0] - .5, dy = mouse[1] - .42, d = Math.hypot(dx, dy);
+        gazeRot = Math.max(-.035, Math.min(.035, dx * .03));
+        if (d < .55) e = pick('wary', 'annoyed');
+        else if (Math.abs(dx) > Math.abs(dy) * 0.8) e = pick(dx < 0 ? 'look_left' : 'look_right', 'neutral');
+        else e = pick(dy < 0 ? 'look_up' : 'look_down', 'neutral');
+      }
       if (now > nextBlink) { blinkUntil = now + 140; nextBlink = now + 2200 + Math.random() * 3800; }
-      if (now < blinkUntil) e = 'blink';
+      if (now < blinkUntil && (e === 'neutral' || !inHero)) e = 'blink';
     }
     if (s !== state) { state = s; if (!intro) setStep(s); }
     setExpr(e);

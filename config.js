@@ -12,7 +12,16 @@ window.FACE_CONFIG = {
     shock:   "assets/face/shock.webp",   // 刚被抓住：吓一跳
     pain:    "assets/face/pain.webp",    // 拉扯中：龇牙喊疼
     dizzy:   "assets/face/dizzy.webp",   // 松手后：晕乎乎
-    done:    "assets/face/done.webp"     // 连续被拉 3 次：彻底无语
+    done:    "assets/face/done.webp",    // 连续被拉 3 次：彻底无语
+    // ---- 可选（缺了会自动退回上面的基础表情）----
+    look_left:  "assets/face/look_left.webp",  // 拳头在左边：盯着看
+    look_right: "assets/face/look_right.webp", // 拳头在右边
+    look_up:    "assets/face/look_up.webp",    // 拳头在上方
+    look_down:  "assets/face/look_down.webp",  // 拳头在下方
+    wary:       "assets/face/wary.webp",       // 拳头靠近脸：紧张
+    flinch:     "assets/face/flinch.webp",     // 戳一下 / 悬停在眼睛上：闭眼躲
+    pain_up:    "assets/face/pain_up.webp",    // 往上拉
+    yell:       "assets/face/yell.webp"        // 往下拉 / 拉太远：大叫
   },
   pullsUntilDone: 3,
   // 物理参数（想更软 / 更弹可以调这里）

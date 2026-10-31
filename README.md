@@ -11,6 +11,9 @@ Live: https://yeje-cpu.github.io/test-1031/
 - **Shading**: per-vertex strain brightens stretched skin.
 - **Head sway**: the head (not the shoulders) tilts and shifts toward the pull.
 - **Sound**: synthesized in `sound.js` with Web Audio (grab pop, rubber creak while stretching, slap + boing on release). Toggle 🔊 in the nav.
+- **Gaze**: when the fist is near (not touching), he watches it: looks left/right/up/down, gets nervous when it gets close, flinches when you hover his eyes.
+- **Poke**: a quick click is a poke — he winces and the skin ripples.
+- **Direction-aware pain**: pull up → wide-eyed wince, pull down or too far → yells, sideways → grimace.
 - **Expressions**: hover → annoyed, grab → shock, pull → pain, let go → dizzy, 3 pulls → unimpressed + headline turns into "Hey! I'm …". Random blinks when idle.
 
 ## Use your own face

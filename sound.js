@@ -46,6 +46,15 @@ window.SFX = (() => {
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.4 * a + 0.1, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     o.connect(g); g.connect(master); o.start(t); v.start(t); o.stop(t + dur + 0.05); v.stop(t + dur + 0.05);
   }
+  function poke() {
+    if (!init()) return; const t = ac.currentTime;
+    const o = ac.createOscillator(), g = ac.createGain(); o.type = 'sine';
+    o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(55, t + 0.14);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.7, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.2);
+    const n = noise(0.04), f = ac.createBiquadFilter(), ng = ac.createGain(); f.type = 'bandpass'; f.frequency.value = 1400; ng.gain.setValueAtTime(0.5, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+    n.connect(f); f.connect(ng); ng.connect(master); n.start(t);
+  }
   function toggle() { on = !on; localStorage.setItem('pmf-sound', on ? 'on' : 'off'); if (on) init(); if (master) master.gain.setTargetAtTime(on ? 0.9 : 0, ac.currentTime, 0.02); return on; }
-  return { grab, stretch, stopStretch, release, toggle, get on() { return on; } };
+  return { poke, grab, stretch, stopStretch, release, toggle, get on() { return on; } };
 })();
