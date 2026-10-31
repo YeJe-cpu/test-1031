@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>捏捏未来 CEO · 表弟版 Dario（恶搞）</title>
+<meta name="description" content="我表弟的梦想是成为 Dario Amodei。来，先替全网网友捏捏他。非官方恶搞页面。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#">dario<span class="clay">.wannabe</span> <span class="badge">非官方 · 恶搞</span></a>
+  <nav><a href="#rants">吐槽</a><a href="#wall">留言</a><a href="#lineup">表弟产品线</a><button id="snd" class="snd" aria-label="Toggle sound">🔊</button></nav>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="kicker">我表弟的梦想：成为 Anthropic CEO</p>
+    <h1 id="headline"><span class="l1">来，</span><span class="l2">捏捏未来</span><span class="l3"><mark>CEO.</mark></span></h1>
+    <p class="steps" id="steps"><span data-s="hover">Hover</span> · <span data-s="grab">Grab</span> · <span data-s="pull">Pull</span> · <span data-s="letgo">Let go</span></p>
+    <div class="asl" id="asl">
+      <div class="asl-top"><b>Responsible Pinching Policy</b><span id="aslLevel">ASL-1</span></div>
+      <div class="asl-bar"><i id="aslFill"></i></div>
+      <p id="aslText">基本无害。目前只是被盯着看。</p>
+      <p class="count">本浏览器累计：捏 <b id="nPull">0</b> 次 · 戳 <b id="nPoke">0</b> 次 · 砸留言 <b id="nThrow">0</b> 条</p>
+    </div>
+  </div>
+  <div class="stage" id="stage">
+    <div class="disc"></div>
+    <canvas id="face" aria-label="可以抓住拉扯的表弟版 Dario 头像"></canvas>
+  </div>
+  <div class="hand" id="hand" aria-hidden="true">🖐️</div>
+  <div class="danmaku" id="danmaku" aria-hidden="true"></div>
+</section>
+
+<section class="block" id="rants">
+  <p class="eyebrow">01 — 华人社区为什么对他有意见（有出处的那种）</p>
+  <div class="rants">
+    <article class="rant">
+      <time>2025-09-05</time>
+      <h3>中资控股公司，统统不卖</h3>
+      <p>Anthropic 更新服务条款：被中国等“不支持地区”公司直接或间接持股超过 50% 的实体，全球范围内都不能再用 Claude；公告里把中国称作 “adversarial nation”。</p>
+      <blockquote>网友吐槽（概括）：“海外子公司也不行？这是按血统卖 API。”</blockquote>
+      <a href="https://www.anthropic.com/news/updating-restrictions-of-sales-to-unsupported-regions" target="_blank" rel="noopener">来源：Anthropic 官方公告 ↗</a>
+      <button class="throw" data-msg="按股权卖 API？">替网友捏一下 ✊</button>
+    </article>
+    <article class="rant">
+      <time>2025-01</time>
+      <h3>DeepSeek 刚火，他就写长文要卡芯片</h3>
+      <p>Dario 在个人网站发表《On DeepSeek and Export Controls》，主张美国对华芯片出口管制要更严，而不是放松。</p>
+      <blockquote>网友吐槽（概括）：“技术上卷不过，就从供应链上卷。”</blockquote>
+      <a href="https://darioamodei.com/post/on-deepseek-and-export-controls" target="_blank" rel="noopener">来源：darioamodei.com ↗</a>
+      <button class="throw" data-msg="又要卡芯片？">替网友捏一下 ✊</button>
+    </article>
+    <article class="rant">
+      <time>2026-02-23</time>
+      <h3>点名三家中国实验室“蒸馏” Claude</h3>
+      <p>Anthropic 发文称 DeepSeek、月之暗面、MiniMax 通过约 24,000 个虚假账号、超 1,600 万次对话提取 Claude 能力。</p>
+      <blockquote>网友吐槽（概括）：“那你们的训练数据又是从哪儿来的？”</blockquote>
+      <a href="https://www.anthropic.com/news/detecting-and-preventing-distillation-attacks" target="_blank" rel="noopener">来源：Anthropic 官方文章 ↗</a>
+      <button class="throw" data-msg="训练数据哪来的？">替网友捏一下 ✊</button>
+    </article>
+    <article class="rant">
+      <time>日常</time>
+      <h3>想付钱都难</h3>
+      <p>Claude 不向中国大陆提供服务。社区里最常见的帖子类型：注册卡验证、海外卡被拒、刚充值就被风控封号。</p>
+      <blockquote>网友吐槽（概括）：“世界上最难的事：给 Anthropic 付钱。”</blockquote>
+      <span class="src">来源：中文社区常见讨论的概括，非单一事件</span>
+      <button class="throw" data-msg="还我 Pro 会员！">替网友捏一下 ✊</button>
+    </article>
+  </div>
+</section>
+
+<section class="block wall" id="wall">
+  <p class="eyebrow">02 — 有话直说</p>
+  <h2>把你的不满，<mark>砸</mark>到他脸上。</h2>
+  <form id="say" autocomplete="off">
+    <input id="msg" maxlength="40" placeholder="比如：什么时候对中国开放？" aria-label="你想对他说的话">
+    <button type="submit">发射 ✊</button>
+  </form>
+  <p class="small">留言会飞到上面的脸上，然后变成弹幕。目前只保存在你自己的浏览器里（这是个静态网站，没有服务器）。</p>
+  <ul class="mine" id="mine"></ul>
+</section>
+
+<section class="block" id="lineup">
+  <p class="eyebrow">03 — 表弟的 Anthropic 梦（他已经提前规划好了）</p>
+  <div class="cols3">
+    <div class="tile"><span class="tag">Claude Haiku</span><h3>表弟 Haiku</h3><p>速度最快的型号：每天早上 7 点准时响应“再睡五分钟”。</p></div>
+    <div class="tile"><span class="tag">Claude Sonnet</span><h3>表弟 Sonnet</h3><p>性价比之王：作业写一半就能交，老师说“思路是对的”。</p></div>
+    <div class="tile"><span class="tag">Claude Opus</span><h3>表弟 Opus</h3><p>最强旗舰：毕业设计还没开题，但 PPT 封面已经做了三版。</p></div>
+  </div>
+  <div class="cols2">
+    <div class="tile dark"><span class="tag">Constitutional AI</span><h3>表弟宪法</h3><ol><li>不得捏脸。</li><li>如果被捏，参见第一条。</li><li>被捏三次后，有权回复 “I'm sorry, but I can't…”。</li></ol></div>
+    <div class="tile dark"><span class="tag">Machines of Loving Grace</span><h3>愿景对比</h3><p><b>Dario：</b>“a country of geniuses in a datacenter”。</p><p><b>表弟：</b>一宿舍的天才，在 wifi 断掉之前。</p></div>
+  </div>
+</section>
+
+<footer class="block foot">
+  <p>粉丝恶搞作品，与 Anthropic 及 Dario Amodei 本人无关。照片由页面主人提供，表情由 AI 生成。吐槽卡片中的事件均附原始出处，“网友吐槽”为社区观点概括。</p>
+  <p class="small"><a href="../">← 回到 Leo 的主页</a> · <a href="https://github.com/YeJe-cpu/test-1031">源码</a></p>
+</footer>
+
+<script src="config.js"></script>
+<script src="../sound.js"></script>
+<script src="../face.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

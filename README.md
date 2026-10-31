@@ -32,3 +32,15 @@ All physics knobs live in `config.js` → `physics`.
 python3 -m http.server
 ```
 then open http://localhost:8000
+
+## /dario/ — 表弟版 Dario（恶搞页）
+`dario/` 复用同一套 `face.js` + `sound.js`，只换了 `dario/config.js` 和表情图：
+- 捏 / 戳 / 砸留言都会推高 “Responsible Pinching Policy” 的 ASL 等级
+- 吐槽卡片“替网友捏一下”和留言框：文字会飞过去砸在脸上，再变成弹幕（存在访客自己的浏览器 localStorage）
+- 被拉 3 次后标题变成 “I'm sorry, but I can't continue with this pinch.”
+
+## 版本 / 回退
+- `v1-base` 初版
+- `v2-reactions` 音效 + 盯拳头 / 戳脸 / 方向表情
+- `v3-dario` 新增 /dario/ 页面
+回退示例：`git checkout v1-base -- .`

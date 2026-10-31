@@ -1,6 +1,7 @@
 /* Pull-my-face: WebGL mesh warp + spring/wave skin physics + expression states. No dependencies. */
 (() => {
   const C = window.FACE_CONFIG, P = C.physics;
+  const EYE = C.eyeBand || [.3, .45], FC = C.faceCenter || [.5, .42];
   const canvas = document.getElementById('face');
   const stage = document.getElementById('stage');
   const hero = document.querySelector('.hero');
@@ -97,22 +98,25 @@
   const release = () => {
     if (!grabbing) return; grabbing = false; hand.textContent = '🖐️';
     const now = performance.now();
-    if (now - grabAt < 230 && maxPull < 0.03) { // quick tap = poke / slap
-      pokeUntil = now + 750; window.SFX && SFX.poke && SFX.poke();
-      for (let k = 0; k < NV; k++) { if (w[k] < 0.01) continue; const dx = base[2*k] - grabPt[0], dy = base[2*k+1] - grabPt[1], r = Math.hypot(dx, dy) + 1e-3; vel[2*k] += dx / r * w[k] * 0.9; vel[2*k+1] += dy / r * w[k] * 0.9; }
-      rotV += (grabPt[0] < 0.5 ? 1 : -1) * 0.9;
-      return;
-    }
+    if (now - grabAt < 230 && maxPull < 0.03) { poke(grabPt, 1); return; } // quick tap = poke / slap
     window.SFX && SFX.release(maxPull);
-    if (maxPull > 0.06) pulls++;
-    if (pulls >= C.pullsUntilDone) { pulls = 0; doneUntil = now + 2600; if (!intro) showIntro(); }
+    if (maxPull > 0.06) { pulls++; dispatchEvent(new CustomEvent('face:pull', { detail: { amount: maxPull } })); }
+    if (pulls >= C.pullsUntilDone) { pulls = 0; doneUntil = now + 2600; dispatchEvent(new CustomEvent('face:done')); if (!intro) showIntro(); }
     letgoUntil = now + 1500;
   };
   addEventListener('pointerup', release); addEventListener('pointercancel', release); addEventListener('blur', release);
 
+  function poke(p, strength = 1) {
+    pokeUntil = performance.now() + 750; window.SFX && SFX.poke && SFX.poke();
+    const s2 = 2 * P.grabRadius * P.grabRadius;
+    for (let k = 0; k < NV; k++) { const dx = base[2*k] - p[0], dy = base[2*k+1] - p[1], r = Math.hypot(dx, dy) + 1e-3, ww = Math.exp(-(dx*dx + dy*dy) / s2); if (ww < 0.01) continue; vel[2*k] += dx / r * ww * 0.9 * strength; vel[2*k+1] += dy / r * ww * 0.9 * strength; }
+    rotV += (p[0] < 0.5 ? 1 : -1) * 0.9 * strength;
+    dispatchEvent(new CustomEvent('face:poke'));
+  }
   function showIntro() {
     intro = true;
     headline.classList.add('swap');
+    if (C.introHTML) { headline.innerHTML = C.introHTML; steps.innerHTML = C.introSteps || ''; return; }
     headline.innerHTML = `<span class="l1">Hey!</span><span class="l2">I'm <mark>${C.name}</mark></span><span class="l3" style="font-size:.38em;letter-spacing:-.01em;font-weight:500;margin-top:.6em">I make small, useful software.</span>`;
     steps.innerHTML = 'Pull responsibly.';
   }
@@ -187,11 +191,11 @@
     else if (now < pokeUntil) { s = 'grab'; e = pick('flinch', 'shock'); }
     else if (now < doneUntil) { s = 'letgo'; e = 'done'; }
     else if (now < letgoUntil) { s = 'letgo'; e = 'dizzy'; }
-    else if (hovering) { s = 'hover'; e = (mouse[1] > .3 && mouse[1] < .45) ? pick('flinch', 'annoyed') : 'annoyed'; }
+    else if (hovering) { s = 'hover'; e = (mouse[1] > EYE[0] && mouse[1] < EYE[1]) ? pick('flinch', 'annoyed') : 'annoyed'; }
     else {
       s = ''; e = 'neutral';
       if (inHero) { // watch the fist
-        const dx = mouse[0] - .5, dy = mouse[1] - .42, d = Math.hypot(dx, dy);
+        const dx = mouse[0] - FC[0], dy = mouse[1] - FC[1], d = Math.hypot(dx, dy);
         gazeRot = Math.max(-.035, Math.min(.035, dx * .03));
         if (d < .55) e = pick('wary', 'annoyed');
         else if (Math.abs(dx) > Math.abs(dy) * 0.8) e = pick(dx < 0 ? 'look_left' : 'look_right', 'neutral');
@@ -220,5 +224,8 @@
     requestAnimationFrame(frame);
     Object.entries(C.faces).forEach(([n, src]) => n !== 'neutral' && load(n, src));
   });
-  window.__face = { get state() { return { state, cur, pulls, intro }; } };
+  window.__face = { get state() { return { state, cur, pulls, intro }; },
+    // screen point -> poke the face there (used by thrown messages)
+    hitAt(x, y, strength = 1) { const p = toImg(x, y); poke(p, strength); },
+    faceScreenPoint(u, v) { const r = canvas.getBoundingClientRect(); return [r.left + (u + PAD) / SPAN * r.width, r.top + (v + PAD) / SPAN * r.height]; } };
 })();
