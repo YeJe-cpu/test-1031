@@ -1,0 +1,41 @@
+:root{--bg:#f6f4ef;--ink:#111;--accent:#f0501e;--muted:#8a867e}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter Tight",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+mark{background:linear-gradient(transparent 52%,var(--accent) 52%,var(--accent) 92%,transparent 92%);color:inherit;padding:0 .05em}
+.nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:22px 5vw;z-index:5;font-weight:700;font-size:14px}
+.nav nav a{margin-left:22px;text-decoration:none;opacity:.7}.nav nav a:hover{opacity:1}
+.logo{text-decoration:none;font-family:"JetBrains Mono",monospace}
+.hero{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr;align-items:center;padding:0 7vw;gap:4vw;position:relative;user-select:none;-webkit-user-select:none}
+h1{font-size:clamp(48px,7.4vw,112px);line-height:.98;letter-spacing:-.035em;font-weight:900;margin:0}
+h1 span{display:block}
+h1.swap span{animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+h1.swap span:nth-child(2){animation-delay:.08s}h1.swap span:nth-child(3){animation-delay:.16s}
+@keyframes rise{from{opacity:0;transform:translateY(.35em);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.steps{margin-top:5vh;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink)}
+.steps span{transition:color .15s}.steps span.on{color:var(--accent)}
+.stage{position:relative;width:min(40vw,520px);aspect-ratio:1;justify-self:center}
+.disc{position:absolute;left:4%;top:9%;width:92%;height:92%;border-radius:50%;background:var(--accent)}
+#face{position:absolute;left:-40%;top:-40%;width:180%;height:180%;pointer-events:none}
+.fallback{position:absolute;inset:0;width:100%;display:none}
+.nogl .fallback{display:block}
+.hand{position:fixed;left:0;top:0;font-size:34px;pointer-events:none;z-index:10;opacity:0;transform:translate(-50%,-50%);transition:opacity .12s;will-change:transform}
+.hand.show{opacity:1}
+.hero.hovering{cursor:none}
+.block{padding:14vh 7vw;border-top:1px solid #e2ded6}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 36px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid #e6e2da;border-radius:14px;padding:26px;display:grid;grid-template-columns:1fr auto;transition:transform .2s,box-shadow .2s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -18px rgba(0,0,0,.3)}
+.card .code,.card .yr{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted)}
+.card h3{grid-column:1/-1;font-size:30px;margin:40px 0 6px;letter-spacing:-.02em}
+.card p{grid-column:1/-1;margin:0;color:#555}
+h2{font-size:clamp(30px,4vw,56px);letter-spacing:-.03em;line-height:1.05;margin:0;font-weight:900}
+.cols{display:grid;grid-template-columns:1.2fr 1fr;gap:5vw}
+.cols p,.cols li{font-size:18px;line-height:1.6;color:#333}
+.small{color:var(--muted);font-size:13px;margin-top:40px}
+@media (max-width:800px){
+  .hero{grid-template-columns:1fr;padding-top:90px;text-align:left}
+  .stage{width:78vw;order:-1;margin-top:6vh}
+  .cards,.cols{grid-template-columns:1fr}
+}
