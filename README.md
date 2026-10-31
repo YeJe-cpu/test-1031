@@ -10,6 +10,7 @@ Live: https://yeje-cpu.github.io/test-1031/
 - **Skin physics**: every vertex is a spring (`stiffness`) coupled to its neighbours (`coupling`), so a pull spreads like a wave and jiggles back on release.
 - **Shading**: per-vertex strain brightens stretched skin.
 - **Head sway**: the head (not the shoulders) tilts and shifts toward the pull.
+- **Sound**: synthesized in `sound.js` with Web Audio (grab pop, rubber creak while stretching, slap + boing on release). Toggle 🔊 in the nav.
 - **Expressions**: hover → annoyed, grab → shock, pull → pain, let go → dizzy, 3 pulls → unimpressed + headline turns into "Hey! I'm …". Random blinks when idle.
 
 ## Use your own face

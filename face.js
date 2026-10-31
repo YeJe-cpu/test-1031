@@ -88,12 +88,13 @@
     const s2 = 2 * P.grabRadius * P.grabRadius;
     for (let k = 0; k < NV; k++) { const dx = base[2*k] + disp[2*k] - p[0], dy = base[2*k+1] + disp[2*k+1] - p[1]; w[k] = Math.exp(-(dx*dx + dy*dy) / s2); }
     // the grabbed point should be the CURRENT deformed position; re-center on rest pos
-    hand.textContent = '✊'; hand.classList.add('show');
+    hand.textContent = '✊'; hand.classList.add('show'); window.SFX && SFX.grab();
     hand.style.transform = `translate(${e.clientX}px,${e.clientY}px) translate(-50%,-50%)`;
   });
   const release = () => {
     if (!grabbing) return; grabbing = false; hand.textContent = '🖐️';
     const now = performance.now();
+    window.SFX && SFX.release(maxPull);
     if (maxPull > 0.06) pulls++;
     if (pulls >= C.pullsUntilDone) { pulls = 0; doneUntil = now + 2600; if (!intro) showIntro(); }
     letgoUntil = now + 1500;
@@ -163,6 +164,7 @@
     // expression + step logic
     let s, e;
     const pullLen = Math.hypot(D[0], D[1]);
+    if (grabbing && window.SFX) { SFX.stretch(pullLen, Math.abs(pullLen - (frame.pl || 0)) / Math.max(dt, 1e-3)); frame.pl = pullLen; }
     if (grabbing) { const early = now - grabAt < 280 && pullLen < .05; s = pullLen > .03 ? 'pull' : 'grab'; e = early || pullLen < .03 ? 'shock' : 'pain'; }
     else if (now < doneUntil) { s = 'letgo'; e = 'done'; }
     else if (now < letgoUntil) { s = 'letgo'; e = 'dizzy'; }

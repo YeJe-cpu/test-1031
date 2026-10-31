@@ -39,3 +39,4 @@ h2{font-size:clamp(30px,4vw,56px);letter-spacing:-.03em;line-height:1.05;margin:
   .stage{width:78vw;order:-1;margin-top:6vh}
   .cards,.cols{grid-template-columns:1fr}
 }
+.snd{margin-left:22px;background:none;border:0;font-size:16px;cursor:pointer;opacity:.75;padding:0}.snd:hover{opacity:1}
